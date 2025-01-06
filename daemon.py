@@ -2,7 +2,7 @@ from datetime import datetime
 from app import db, Log, app
 import time
 import struct
-from pyrf24 import RF24, RF24_PA_MAX
+from pyrf24 import RF24, RF24_PA_HIGH, RF24_250KBPS
 
 
 ########### USER CONFIGURATION ###########
@@ -35,7 +35,7 @@ radio_number = bool(
 
 # set the Power Amplifier level to -12 dBm since this test example is
 # usually run with nRF24L01 transceivers in close proximity of each other
-radio.setPALevel(RF24_PA_MAX)  # RF24_PA_MAX is default
+radio.setPALevel(RF24_PA_HIGH)  # RF24_PA_MAX is default
 
 # set the TX address of the RX node into the TX pipe
 radio.openWritingPipe(address[radio_number])  # always uses pipe 0
@@ -49,6 +49,7 @@ radio.openReadingPipe(1, address[not radio_number])  # using pipe 1
 payload_size = 5 * 4 + 2 * 2 + 1
 radio.payloadSize = payload_size
 radio.channel = 108
+radio.dataRate = RF24_250KBPS
 
 # for debugging, we have 2 options that print a large block of details
 # (smaller) function that prints raw register values
