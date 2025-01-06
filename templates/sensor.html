@@ -14,18 +14,15 @@ https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter
     <a type="button" href="/">Retour</a>
     <div><h1>{{ sensor.name }}</h1></div>
     <div style="border: solid 1px black; width: 300px; margin-bottom: 10px;">
-        <p>Température: {{ sensor.last_log.temperature|default("N/A") }} °C</p>
-        <p>Humidité: {{ sensor.last_log.humidity|default("N/A") }} %</p>
-        <p>Mis à jour le : {{ sensor.last_log.timestamp|default("N/A")|date }}</p>
+        <p>Température : {{ sensor.last_log.temperature|default("N/A") }} °C</p>
+        <p>Humidité : {{ sensor.last_log.humidity|default("N/A") }} %</p>
+        <p>Pression : {{ sensor.last_log.humidity|default("N/A") }} hPa</p>
+        <p>Mis à jour le {{ sensor.last_log.timestamp|default("N/A")|date }}</p>
     </div>
 
     <div>
         <canvas id="myChart"></canvas>
     </div>
-
-    {% for log in logs %}
-        <p>{{ log.timestamp }} - Température: {{ log.temperature }} °C, Humidité: {{ log.humidity }} %</p>
-    {% endfor %}
 
     <script>
     const ctx = document.getElementById('myChart');
@@ -40,8 +37,8 @@ https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter
             yAxisID: 'y'
         },
         {
-            label: 'RH (%)',
-            data: [{% for log in logs %}{{ log.humidity }}, {% endfor %}],
+            label: 'Pression (hPa)',
+            data: [{% for log in logs %}{{ log.pressure }}, {% endfor %}],
             fill: false,
             borderColor: 'rgb(75, 10, 192)',
             tension: 0.1,
@@ -81,7 +78,9 @@ https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter
         type: 'linear',
         display: true,
         position: 'left',
-        text: 'T (°C)'
+        text: 'T (°C)',
+        min: 0,
+        max: 45
       },
       y1: {
         type: 'linear',
@@ -91,7 +90,9 @@ https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter
         grid: {
           drawOnChartArea: false, // only want the grid lines for one axis to show up
         },
-        text: 'H (%)'
+        text: 'Pression (hPa)',
+        min: 900,
+        max: 1100
       },
             }
         }
