@@ -29,9 +29,10 @@ address = [b"1Node", b"2Node"]
 # to use different addresses on a pair of radios, we need a variable to
 # uniquely identify which address this radio will use to transmit
 # 0 uses address[0] to transmit, 1 uses address[1] to transmit
-radio_number = bool(
-    int(input("Which radio is this? Enter '0' or '1'. Defaults to '0' ") or 0)
-)
+# radio_number = bool(
+#     int(input("Which radio is this? Enter '0' or '1'. Defaults to '0' ") or 0)
+# )
+radio_number = True
 
 # set the Power Amplifier level to -12 dBm since this test example is
 # usually run with nRF24L01 transceivers in close proximity of each other
@@ -175,8 +176,8 @@ def set_role() -> bool:
 
 if __name__ == "__main__":
     try:
-        while set_role():
-            pass  # continue example until 'Q' is entered
+        while True:
+            slave()
     except KeyboardInterrupt:
         print(" Keyboard Interrupt detected. Powering down radio.")
         radio.powerDown()
