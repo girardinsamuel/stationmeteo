@@ -46,7 +46,7 @@ radio.openReadingPipe(1, address[not radio_number])  # using pipe 1
 # To save time during transmission, we'll set the payload size to be only
 # what we need. A float value occupies 4 bytes in memory using
 # struct.pack(); "f" means an unsigned float
-payload_size = 5 * 4 + 2 * 2 + 1
+payload_size = 6 * 2 + 4
 radio.payloadSize = payload_size
 radio.channel = 108
 radio.data_rate = RF24_250KBPS
@@ -105,11 +105,11 @@ def slave(timeout=3600):
             # buffer[:4] truncates padded 0s in case payloadSize was not set
             # payload[0] = struct.unpack("<f", buffer[:4])[0]
             buffer = radio.read(payload_size)
-            data = struct.unpack("=hfffffh?", buffer)
+            data = struct.unpack("=hfhhhhh", buffer)
 
             # print details about the received packet
             print(data)
-            id, pressure, humidity, temperature, rain, light, battery, simple = data
+            id, pressure, humidity, temperature, rain, light, battery = data
             # print(
             #     f"Received {radio.payloadSize} bytes",
             #     f"on pipe {pipe_number}: {payload[0]}",
