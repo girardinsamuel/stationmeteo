@@ -84,7 +84,7 @@ def master():
     print(failures, "failures detected. Leaving TX role.")
 
 
-def slave(timeout=6):
+def slave(timeout=3600):
     """Listen for any payloads and print the transaction
 
     :param int timeout: The number of seconds to wait (with no transmission)
@@ -124,7 +124,6 @@ def slave(timeout=6):
                     rain=rain,
                     light=light,
                     battery=battery,
-                    simple=simple,
                     timestamp=datetime.now(),
                 )
                 db.session.add(log)
