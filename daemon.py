@@ -48,12 +48,13 @@ radio.openReadingPipe(1, address[not radio_number])  # using pipe 1
 # struct.pack(); "f" means an unsigned float
 payload_size = 5 * 4 + 2 * 2 + 1
 radio.payloadSize = payload_size
+radio.channel = 108
 
 # for debugging, we have 2 options that print a large block of details
 # (smaller) function that prints raw register values
 # radio.printDetails()
 # (larger) function that prints human readable data
-# radio.printPrettyDetails()
+radio.printPrettyDetails()
 
 # using the python keyword global is bad practice. Instead we'll use a 1 item
 # list to store our float number for the payloads sent/received
