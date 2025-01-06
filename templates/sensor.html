@@ -16,7 +16,7 @@ https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter
     <div style="border: solid 1px black; width: 300px; margin-bottom: 10px;">
         <p>Température : {{ sensor.last_log.temperature|default("N/A") }} °C</p>
         <p>Humidité : {{ sensor.last_log.humidity|default("N/A") }} %</p>
-        <p>Pression : {{ sensor.last_log.humidity|default("N/A") }} hPa</p>
+        <p>Pression : {{ sensor.last_log.pressure|default("N/A") }} hPa</p>
         <p>Mis à jour le {{ sensor.last_log.timestamp|default("N/A")|date }}</p>
     </div>
 
@@ -70,8 +70,8 @@ https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter
                     title: {
                     display: true,
                     text: 'Heure',
-                    min: new Date().setHours(0, 0, 0, 0),
-                    max: new Date().setHours(24, 0, 0, 0),
+                    // min: new Date().setHours(0, 0, 0, 0),
+                    // max: new Date().setHours(24, 0, 0, 0),
                     }
                 },
                 y: {
