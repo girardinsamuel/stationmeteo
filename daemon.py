@@ -49,7 +49,7 @@ radio.openReadingPipe(1, address[not radio_number])  # using pipe 1
 payload_size = 5 * 4 + 2 * 2 + 1
 radio.payloadSize = payload_size
 radio.channel = 108
-radio.dataRate = RF24_250KBPS
+radio.data_rate = RF24_250KBPS
 
 # for debugging, we have 2 options that print a large block of details
 # (smaller) function that prints raw register values
