@@ -3,8 +3,10 @@ from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from typing import List
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
-from sqlalchemy import ForeignKey
+from sqlalchemy import ForeignKey, func
 import random
+from sqlalchemy import cast, Date
+from datetime import date as date_func, datetime
 
 
 class Base(DeclarativeBase):
@@ -14,29 +16,12 @@ class Base(DeclarativeBase):
 db = SQLAlchemy(model_class=Base)
 
 
-# class Sensor(Base):
-#     __tablename__ = "sensor_table"
-
-#     id: Mapped[int] = mapped_column(primary_key=True)
-#     name: Mapped[str] = mapped_column(unique=True)
-#     logs: Mapped[List["DataLog"]] = relationship("DataLog", backref="sensor")
-#     # comments = db.relationship('Comment', backref='post')
-
-
-# class DataLog(Base):
-#     __tablename__ = "logs_table"
-
-#     id: Mapped[int] = mapped_column(primary_key=True)
-#     temperature: Mapped[float] = mapped_column()
-#     humidity: Mapped[float] = mapped_column()
-#     sensor_id = db.Column(db.Integer, ForeignKey("sensor.id"))
-
-
 class Sensor(db.Model):
     __tablename__ = "sensors"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
     logs = db.relationship("Log", back_populates="sensor")
+    simple = db.Column(db.Boolean)
 
 
 class Log(db.Model):
@@ -62,13 +47,21 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db.init_app(app)
 
 
+@app.template_filter()
+def date(value, format="datetime"):
+    if isinstance(value, str) or not value:
+        return value
+    if format == "datetime":
+        format = "%d/%m/%y à %H:%M:%S"
+    elif format == "time":
+        format = "%H:%M:%S"
+    return value.strftime(format)
+
+
 @app.route("/")
 def home():
     """Show last measurement of all sensors."""
-    # sensors = [
-    #     {"name": "Maison", "id": 1, "data": {"temperature": 20, "humidity": 50}},
-    #     {"name": "Jardin", "id": 2, "data": {"temperature": 16, "humidity": 80}},
-    # ]
+
     sensors = Sensor.query.all()
     for sensor in sensors:
         sensor.last_log = sensor.logs[-1] if sensor.logs else None
@@ -78,6 +71,7 @@ def home():
 
 @app.route("/modules/<sensor_id>")
 def sensor_detail(sensor_id):
+    """Show measurement of the current day."""
     # sensor = {
     #     "name": "Maison",
     #     "id": sensor_id,
@@ -85,7 +79,15 @@ def sensor_detail(sensor_id):
     # }
     sensor = Sensor.query.get_or_404(sensor_id)
 
-    return render_template("sensor.html", sensor=sensor)
+    sensor.last_log = sensor.logs[-1] if sensor.logs else None
+
+    today = datetime.today().date()
+    logs = (
+        Log.query.filter(sensor_id == sensor.id)
+        .filter(func.date(Log.timestamp) == today)
+        .all()
+    )
+    return render_template("sensor.html", sensor=sensor, logs=logs)
 
 
 @app.route("/modules/<sensor_id>/log")

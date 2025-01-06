@@ -4,38 +4,100 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Module {{ sensor.name }}</title>
-    <head>
-        <script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="
+https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js
+"></script>
 </head>
-</head>
+
 <body>
     <a type="button" href="/">Retour</a>
     <div><h1>{{ sensor.name }}</h1></div>
-    <div>
-        {# <p>Température: {{ sensor.data.temperature }} °C</p> #}
+    <div style="border: solid 1px black; width: 300px; margin-bottom: 10px;">
+        <p>Température: {{ sensor.last_log.temperature|default("N/A") }} °C</p>
+        <p>Humidité: {{ sensor.last_log.humidity|default("N/A") }} %</p>
+        <p>Mis à jour le : {{ sensor.last_log.timestamp|default("N/A")|date }}</p>
     </div>
 
-    <div id="plot"></div>
-    {% for log in sensor.logs %}
+    <div>
+        <canvas id="myChart"></canvas>
+    </div>
+
+    {% for log in logs %}
         <p>{{ log.timestamp }} - Température: {{ log.temperature }} °C, Humidité: {{ log.humidity }} %</p>
     {% endfor %}
+
     <script>
-        var trace1 = {
-  x: [1, 2, 3, 4],
-  y: [10, 15, 13, 17],
-  type: 'scatter'
-};
+    const ctx = document.getElementById('myChart');
+    const data = {
+        labels: [{% for log in logs %}"{{ log.timestamp }}", {% endfor %}],
+        datasets: [{
+            label: 'T°',
+            data: [{% for log in logs %}{{ log.temperature }}, {% endfor %}],
+            fill: false,
+            borderColor: 'rgb(75, 192, 192)',
+            tension: 0.1,
+            yAxisID: 'y'
+        },
+        {
+            label: 'RH (%)',
+            data: [{% for log in logs %}{{ log.humidity }}, {% endfor %}],
+            fill: false,
+            borderColor: 'rgb(75, 10, 192)',
+            tension: 0.1,
+            yAxisID: 'y1'
+        }
+    ]
+    };
+    const config = {
+        type: 'line',
+        data: data,
+        options: {
+            plugins: {
+                title: {
+                    text: 'Title',
+                    display: true
+                }
+            },
+            scales: {
+                // adapters: {
+                //     date: {
+                //         locale: da
+                //     }
+                // },
+                x: {
+                    type: 'time',
+                    time: {
+                        unit: "hour"
+                    },
+                    title: {
+                    display: true,
+                    text: 'Heure',
+                    min: new Date().setHours(0, 0, 0, 0),
+                    max: new Date().setHours(24, 0, 0, 0),
+                    }
+                },
+                y: {
+        type: 'linear',
+        display: true,
+        position: 'left',
+        text: 'T (°C)'
+      },
+      y1: {
+        type: 'linear',
+        display: true,
+        position: 'right',
+        // grid line settings
+        grid: {
+          drawOnChartArea: false, // only want the grid lines for one axis to show up
+        },
+        text: 'H (%)'
+      },
+            }
+        }
+    };
 
-var trace2 = {
-  x: [1, 2, 3, 4],
-  y: [16, 5, 11, 9],
-  type: 'scatter'
-};
-
-var data = [trace1, trace2];
-
-Plotly.newPlot('plot', data);
-
+    new Chart(ctx, config);
     </script>
 </body>
 </html>

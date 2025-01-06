@@ -11,8 +11,9 @@
         {% for sensor in sensors %}
             <div style="border: solid 1px black; width: 300px; margin-bottom: 10px;">
                 <a href="/modules/{{ sensor.id }}">{{ sensor.name }}</a>
-                <p>Température: {{ sensor.last_log.temperature }} °C</p>
-                <p>Humidité:  %</p>
+                <p>Température: {{ sensor.last_log.temperature|default("N/A") }} °C</p>
+                <p>Humidité: {{ sensor.last_log.humidity|default("N/A") }} %</p>
+                <p>Mis à jour le : {{ sensor.last_log.timestamp|default("N/A")|date }}</p>
             </div>
         {% endfor %}
     </div>
