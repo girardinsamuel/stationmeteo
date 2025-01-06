@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div><h1>Station Météo</h1></div>
+    <div>
+        {% for sensor in sensors %}
+            <div style="border: solid 1px black; width: 300px; margin-bottom: 10px;">
+                <a href="/modules/{{ sensor.id }}">{{ sensor.name }}</a>
+                <p>Température: {{ sensor.last_log.temperature }} °C</p>
+                <p>Humidité:  %</p>
+            </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

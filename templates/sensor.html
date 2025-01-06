@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module {{ sensor.name }}</title>
+    <head>
+        <script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
+</head>
+</head>
+<body>
+    <a type="button" href="/">Retour</a>
+    <div><h1>{{ sensor.name }}</h1></div>
+    <div>
+        {# <p>Température: {{ sensor.data.temperature }} °C</p> #}
+    </div>
+
+    <div id="plot"></div>
+    {% for log in sensor.logs %}
+        <p>{{ log.timestamp }} - Température: {{ log.temperature }} °C, Humidité: {{ log.humidity }} %</p>
+    {% endfor %}
+    <script>
+        var trace1 = {
+  x: [1, 2, 3, 4],
+  y: [10, 15, 13, 17],
+  type: 'scatter'
+};
+
+var trace2 = {
+  x: [1, 2, 3, 4],
+  y: [16, 5, 11, 9],
+  type: 'scatter'
+};
+
+var data = [trace1, trace2];
+
+Plotly.newPlot('plot', data);
+
+    </script>
+</body>
+</html>
