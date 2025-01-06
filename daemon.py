@@ -110,6 +110,10 @@ def slave(timeout=3600):
             # print details about the received packet
             print(data)
             id, pressure, humidity, temperature, rain, light, battery = data
+            humidity = humidity / 100.0
+            temperature = temperature / 100.0
+            rain = rain / 100.0
+            light = light / 100.0
             # print(
             #     f"Received {radio.payloadSize} bytes",
             #     f"on pipe {pipe_number}: {payload[0]}",
