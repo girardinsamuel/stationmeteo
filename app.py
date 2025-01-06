@@ -82,8 +82,9 @@ def sensor_detail(sensor_id):
     sensor.last_log = sensor.logs[-1] if sensor.logs else None
 
     today = datetime.today().date()
+
     logs = (
-        Log.query.filter(sensor_id == sensor.id)
+        Log.query.filter(Log.sensor_id == sensor.id)
         .filter(func.date(Log.timestamp) == today)
         .all()
     )
