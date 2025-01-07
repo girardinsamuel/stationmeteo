@@ -50,11 +50,12 @@ https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter
         type: 'line',
         data: data,
         options: {
+            responsive: true,
             plugins: {
                 title: {
-                    text: 'Title',
+                    text: "Aujourd'hui",
                     display: true
-                }
+                },
             },
             scales: {
                 // adapters: {
@@ -65,13 +66,16 @@ https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter
                 x: {
                     type: 'time',
                     time: {
-                        unit: "hour"
+                        unit: "hour",
+                        displayFormats: {
+                            hour: 'H:mm'
+                        },
                     },
                     title: {
-                    display: true,
-                    text: 'Heure',
-                    // min: new Date().setHours(0, 0, 0, 0),
-                    // max: new Date().setHours(24, 0, 0, 0),
+                        display: true,
+                        text: 'Heure',
+                        // min: new Date().setHours(0, 0, 0, 0),
+                        // max: new Date().setHours(24, 0, 0, 0),
                     }
                 },
                 y: {
@@ -79,8 +83,12 @@ https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter
         display: true,
         position: 'left',
         text: 'T (°C)',
-        min: 0,
-        max: 45
+        // suggestedMin: 15,
+        // suggestedMax: 30,
+        title: {
+            display: true,
+            text: 'T (°C)',
+        }
       },
       y1: {
         type: 'linear',
@@ -91,8 +99,12 @@ https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter
           drawOnChartArea: false, // only want the grid lines for one axis to show up
         },
         text: 'Pression (hPa)',
-        min: 900,
-        max: 1100
+        title: {
+            display: true,
+            text: 'P (hPa)',
+        },
+        // min: 900,
+        // max: 1100
       },
             }
         }
