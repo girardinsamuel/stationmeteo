@@ -21,14 +21,24 @@ https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter
         <p>Mis à jour le {{ sensor.last_log.timestamp|default("N/A")|date }}</p>
     </div>
 
+    <div style="margin-bottom: 10px;">
+        <canvas id="tempHumChart"></canvas>
+    </div>
+    <div style="margin-bottom: 10px;">
+        <canvas id="pressureChart"></canvas>
+    </div>
     <div>
-        <canvas id="myChart"></canvas>
+        <canvas id="battChart"></canvas>
     </div>
 
     <script>
-    const ctx = document.getElementById('myChart');
+    const tempHumChart = document.getElementById('tempHumChart');
+    const pressureChart = document.getElementById('pressureChart');
+    const batteryChart = document.getElementById('battChart');
+
+    const timeLabels = [{% for log in logs %}"{{ log.timestamp }}", {% endfor %}]
     const data = {
-        labels: [{% for log in logs %}"{{ log.timestamp }}", {% endfor %}],
+        labels: timeLabels,
         datasets: [{
             label: 'T°',
             data: [{% for log in logs %}{{ log.temperature }}, {% endfor %}],
@@ -38,8 +48,8 @@ https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter
             yAxisID: 'y'
         },
         {
-            label: 'Pression (hPa)',
-            data: [{% for log in logs %}{{ log.pressure }}, {% endfor %}],
+            label: 'Humidité (%)',
+            data: [{% for log in logs %}{{ log.humidity }}, {% endfor %}],
             fill: false,
             borderColor: 'rgb(75, 10, 192)',
             tension: 0.1,
@@ -99,10 +109,10 @@ https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter
         grid: {
           drawOnChartArea: false, // only want the grid lines for one axis to show up
         },
-        text: 'Pression (hPa)',
+        text: 'Humidité (%)',
         title: {
             display: true,
-            text: 'P (hPa)',
+            text: 'H (%)',
         },
         // min: 900,
         // max: 1100
@@ -111,7 +121,133 @@ https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter
         }
     };
 
-    new Chart(ctx, config);
+    new Chart(tempHumChart, config);
+
+    // Pressure
+    const dataPressure = {
+        labels: timeLabels,
+        datasets: [
+        {
+            label: 'Pression (hPa)',
+            data: [{% for log in logs %}{{ log.pressure }}, {% endfor %}],
+            fill: false,
+            borderColor: 'rgb(75, 10, 192)',
+            tension: 0.1,
+        }
+    ]
+    };
+    const configPressure = {
+        type: 'line',
+        data: dataPressure,
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    text: "Aujourd'hui",
+                    display: true
+                },
+            },
+            scales: {
+                // adapters: {
+                //     date: {
+                //         locale: da
+                //     }
+                // },
+                x: {
+                    type: 'time',
+                    time: {
+                        unit: "hour",
+                        displayFormats: {
+                            hour: 'H:mm'
+                        },
+                    },
+                    title: {
+                        display: true,
+                        text: 'Heure',
+                        // min: new Date().setHours(0, 0, 0, 0),
+                        // max: new Date().setHours(24, 0, 0, 0),
+                    }
+                },
+                y: {
+        type: 'linear',
+        display: true,
+        position: 'left',
+        text: 'P (hPa)',
+        // suggestedMin: 15,
+        // suggestedMax: 30,
+        title: {
+            display: true,
+            text: 'P (hPa)',
+        }
+      },
+            }
+        }
+    };
+
+    new Chart(pressureChart, configPressure);
+
+    // Pressure
+    const dataBattery = {
+        labels: timeLabels,
+        datasets: [
+        {
+            label: 'VBatt (V)',
+            data: [{% for log in logs %}{{ log.battery }}, {% endfor %}],
+            fill: false,
+            borderColor: 'rgb(75, 10, 192)',
+            tension: 0.1,
+        }
+    ]
+    };
+    const configBattery = {
+        type: 'line',
+        data: dataBattery,
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    text: "Aujourd'hui",
+                    display: true
+                },
+            },
+            scales: {
+                // adapters: {
+                //     date: {
+                //         locale: da
+                //     }
+                // },
+                x: {
+                    type: 'time',
+                    time: {
+                        unit: "hour",
+                        displayFormats: {
+                            hour: 'H:mm'
+                        },
+                    },
+                    title: {
+                        display: true,
+                        text: 'Heure',
+                        // min: new Date().setHours(0, 0, 0, 0),
+                        // max: new Date().setHours(24, 0, 0, 0),
+                    }
+                },
+                y: {
+        type: 'linear',
+        display: true,
+        position: 'left',
+        text: 'Vbatt (V)',
+        // suggestedMin: 15,
+        // suggestedMax: 30,
+        title: {
+            display: true,
+            text: 'Vbatt (V)',
+        }
+      },
+            }
+        }
+    };
+
+    new Chart(batteryChart, configBattery);
     </script>
 </body>
 </html>
