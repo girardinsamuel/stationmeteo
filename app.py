@@ -33,7 +33,7 @@ class Log(db.Model):
     humidity = db.Column(db.Float)
     rain = db.Column(db.Float)
     light = db.Column(db.Float)
-    battery = db.Column(db.Integer)
+    battery = db.Column(db.Float)
     sensor_id = db.Column(db.Integer, db.ForeignKey("sensors.id"))
     sensor = db.relationship("Sensor", back_populates="logs")
 

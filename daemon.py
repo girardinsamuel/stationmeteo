@@ -115,6 +115,7 @@ def slave(timeout=3600):
             temperature = temperature / 100.0
             rain = rain / 100.0
             light = light / 100.0
+            battery = battery / 100.0
             # print(
             #     f"Received {radio.payloadSize} bytes",
             #     f"on pipe {pipe_number}: {payload[0]}",
