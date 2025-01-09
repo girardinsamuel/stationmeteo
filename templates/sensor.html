@@ -17,6 +17,9 @@ https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter
         <p>Température : {{ sensor.last_log.temperature|default("N/A") }} °C</p>
         <p>Humidité : {{ sensor.last_log.humidity|default("N/A") }} %</p>
         <p>Pression : {{ sensor.last_log.pressure|default("N/A") }} hPa</p>
+        <p>Pluie : {{ sensor.last_log.rain|default("N/A") }} mm</p>
+        <p>Luminosité : {{ sensor.last_log.light|default("N/A") }} lux</p>
+        <p>Vent : {{ sensor.last_log.wind_speed|default("N/A") }} m/s</p>
         <p>Tension batterie : {{ sensor.last_log.battery|default("N/A") }} V</p>
         <p>Capacité batterie : {{ sensor.last_log.battery_level|default("N/A") }} %</p>
         <p>Mis à jour le {{ sensor.last_log.timestamp|default("N/A")|date }}</p>

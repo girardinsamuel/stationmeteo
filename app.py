@@ -33,6 +33,7 @@ class Log(db.Model):
     humidity = db.Column(db.Float)
     rain = db.Column(db.Float)
     light = db.Column(db.Float)
+    wind_speed = db.Column(db.Float)
     battery = db.Column(db.Float)
     battery_level = db.Column(db.Integer)
     sensor_id = db.Column(db.Integer, db.ForeignKey("sensors.id"))
